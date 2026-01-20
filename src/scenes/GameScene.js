@@ -213,6 +213,12 @@ export class GameScene {
         }
         if (d.state === "atacar") this.executeAttack(d, dt);
       } 
+
+        // SOLO ATACA SI ESTÁ CERCA DEL CASTILLO (x < 600 por ejemplo)
+    if (d.state === "atacar" && d.x < 600) { 
+        this.executeAttack(d, dt);
+    }
+}
       else { // ROJO / NORMAL
         if (d.x > stopX) {
           d.x -= d.speed * dt;
@@ -357,4 +363,5 @@ export class GameScene {
     ctx.stroke(); ctx.setLineDash([]);
   }
 }
+
 
