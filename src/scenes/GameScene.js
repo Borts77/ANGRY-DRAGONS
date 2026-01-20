@@ -80,8 +80,17 @@ export class GameScene {
     const { input, audio } = this.app;
     if (this.gameOverTriggered || this.victoryTriggered) return;
 
-    if (input.isKey("escape")) this.app.setScene("menu");
-    if (input.isKey("r")) this.enter({ levelId: this.level.id });
+   // --- CORRECCIÓN DE BLOQUEO: Detectar teclas SIEMPRE ---
+    if (input.isKey("escape")) {
+        this.app.setScene("menu");
+        return;
+    }
+    if (input.isKey("r")) {
+        this.enter({ levelId: this.level.id });
+        return;
+    }
+    // Si ya terminó el juego, no actualizamos físicas ni dragones, pero dejamos las teclas de arriba libres
+    if (this.gameOverTriggered || this.victoryTriggered) return;
 
     this.particles.forEach(p => {
       p.x += p.vx * dt; p.y += p.vy * dt;
@@ -348,3 +357,4 @@ export class GameScene {
     ctx.stroke(); ctx.setLineDash([]);
   }
 }
+
