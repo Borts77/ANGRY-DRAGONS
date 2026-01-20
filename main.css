@@ -85,3 +85,34 @@ canvas { display: block; }
   transition: opacity .2s ease;
 }
 #toast.show { opacity: 1; }
+
+/* Cuadro de Física */
+.physics-panel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    background: rgba(20, 20, 30, 0.95);
+    border: 3px solid #ffcc00;
+    border-radius: 15px;
+    color: white;
+    padding: 30px;
+    font-family: Arial, sans-serif;
+    display: none; /* Escondido por defecto */
+    z-index: 1000;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+.physics-panel h2 { color: #ffcc00; margin-top: 0; }
+.physics-panel code { background: #333; padding: 2px 5px; border-radius: 4px; color: #00ffcc; }
+.physics-panel .close-btn {
+    float: right;
+    cursor: pointer;
+    background: #ff4444;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
