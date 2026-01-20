@@ -44,8 +44,8 @@ export class GameScene {
       rotation: 0,
       attackTimer: 0,
       maxHP: d.hp,
-      state: "atacar", // Para el dragón negro
-      timer: 0         // Para patrones de movimiento
+      state: "atacar",
+      timer: 0
     }));
 
     this.selectedAmmoIdx = 0;
@@ -78,9 +78,8 @@ export class GameScene {
 
   update(dt) {
     const { input, audio } = this.app;
-    if (this.gameOverTriggered || this.victoryTriggered) return;
 
-   // --- CORRECCIÓN DE BLOQUEO: Detectar teclas SIEMPRE ---
+    // --- CORRECCIÓN DE BLOQUEO: Detectar teclas SIEMPRE ---
     if (input.isKey("escape")) {
         this.app.setScene("menu");
         return;
@@ -89,15 +88,18 @@ export class GameScene {
         this.enter({ levelId: this.level.id });
         return;
     }
-    // Si ya terminó el juego, no actualizamos físicas ni dragones, pero dejamos las teclas de arriba libres
+
+    // Si ya terminó el juego, paramos aquí para no mover dragones ni físicas
     if (this.gameOverTriggered || this.victoryTriggered) return;
 
+    // Actualizar partículas
     this.particles.forEach(p => {
       p.x += p.vx * dt; p.y += p.vy * dt;
       p.vy += 400 * dt; p.life -= dt * 2;
     });
     this.particles = this.particles.filter(p => p.life > 0);
 
+    // Selección de munición
     if (!this.projectile.active && input.mouse.justDown) {
       const mx = input.mouse.x; const my = input.mouse.y;
       this.ammo.forEach((a, i) => {
@@ -110,6 +112,7 @@ export class GameScene {
       });
     }
 
+    // Lógica de apuntado y disparo
     if (!this.projectile.active) {
       if (input.mouse.justDown && dist(input.mouse.x, input.mouse.y, this.projectile.x, this.projectile.y) < 100) {
         this.aiming = true;
@@ -137,6 +140,7 @@ export class GameScene {
       }
     }
 
+    // Proyectil en vuelo
     if (this.projectile.active) {
       stepProjectile(this.projectile, dt);
       if (this.projectile.y >= this.level.groundY || this.projectile.x > CANVAS_W + 100) {
@@ -151,10 +155,11 @@ export class GameScene {
     this.updateHUD();
     if (this.screenShake > 0) this.screenShake -= dt * 40;
 
+    // Condición de Victoria
     const aliveDragons = this.dragons.filter(d => d.alive).length;
     if (aliveDragons === 0 && !this.victoryTriggered) {
       this.victoryTriggered = true;
-      audio.play("levelup"); // Usamos levelup como feedback de victoria
+      audio.play("levelup");
       toast("VICTORY! Level Cleared!");
       setTimeout(() => {
         const nextLevel = LEVELS.find(l => l.id === this.level.id + 1);
@@ -163,6 +168,7 @@ export class GameScene {
       }, 3500);
     }
 
+    // Condición de Derrota
     if (this.castleHP <= 0 && !this.gameOverTriggered) {
       this.castleHP = 0;
       this.gameOverTriggered = true;
@@ -191,7 +197,6 @@ export class GameScene {
           d.x -= d.speed * dt;
           d.y += (targetY - d.y) * 0.5 * dt;
         } else {
-          // Vuela en círculos
           d.x = stopX + Math.cos(time * 2) * 60;
           d.y = targetY + Math.sin(time * 2) * 60;
           this.executeAttack(d, dt);
@@ -199,7 +204,7 @@ export class GameScene {
       } 
       else if (d.type === "negro") {
         d.timer += dt;
-        if (d.timer > 2.5) { // Teletransporte cada 2.5s
+        if (d.timer > 2.5) { 
           this.createParticles(d.x, d.y, "#440066", 10);
           if (d.state === "atacar") {
             d.state = "huir";
@@ -211,14 +216,11 @@ export class GameScene {
           this.createParticles(d.x, d.y, "#440066", 10);
           d.timer = 0;
         }
-        if (d.state === "atacar") this.executeAttack(d, dt);
+        // Solo ataca si está en estado atacar Y cerca del castillo
+        if (d.state === "atacar" && d.x < 600) {
+            this.executeAttack(d, dt);
+        }
       } 
-
-        // SOLO ATACA SI ESTÁ CERCA DEL CASTILLO (x < 600 por ejemplo)
-    if (d.state === "atacar" && d.x < 600) { 
-        this.executeAttack(d, dt);
-    }
-}
       else { // ROJO / NORMAL
         if (d.x > stopX) {
           d.x -= d.speed * dt;
@@ -275,14 +277,14 @@ export class GameScene {
 
     ctx.drawImage(assets.I("background"), 0, 0, CANVAS_W, CANVAS_H);
 
-    // DIBUJO DE CASTILLO SEGÚN VIDA
     let cImg = assets.I("castle");
     if (this.castleHP < 40) cImg = assets.I("castle3");
     else if (this.castleHP < 75) cImg = assets.I("castle2");
-    ctx.drawImage(cImg, 20, this.level.groundY - 170, 220, 200);
+    
+    if (cImg) ctx.drawImage(cImg, 20, this.level.groundY - 170, 220, 200);
 
     const catImg = this.projectile.active ? assets.I("catapult2") : assets.I("catapult1");
-    ctx.drawImage(catImg, CATAPULT_POS.x - 60, CATAPULT_POS.y - 120, 190, 190);
+    if (catImg) ctx.drawImage(catImg, CATAPULT_POS.x - 60, CATAPULT_POS.y - 120, 190, 190);
 
     if (this.aiming) this.drawTrajectory(ctx);
 
@@ -293,22 +295,25 @@ export class GameScene {
     ctx.globalAlpha = 1;
 
     const size = (this.projectile.active ? 36 : 32) * this.projectile.scale;
-    ctx.drawImage(assets.I("piedra"), this.projectile.x - size/2, this.projectile.y - size/2, size, size);
+    const pImg = assets.I("piedra");
+    if (pImg) ctx.drawImage(pImg, this.projectile.x - size/2, this.projectile.y - size/2, size, size);
 
-    // DIBUJO DE DRAGONES ANIMADOS
     const frame = (Math.floor(Date.now()/150) % 2 === 0) ? "1" : "2";
     for (const d of this.dragons) {
       if (!d.alive && !d.falling) continue;
       
-      let imgKey = "dragon" + frame; // Rojo
+      let imgKey = "dragon" + frame;
       if (d.type === "verde") imgKey = "dragon_verde" + frame;
       if (d.type === "negro") imgKey = "dragon_negro" + frame;
+
+      const img = assets.I(imgKey);
+      if (!img) continue;
 
       const s = d.scale ?? 1;
       ctx.save();
       ctx.translate(d.x, d.y);
       if (d.falling) ctx.rotate(d.rotation);
-      ctx.drawImage(assets.I(imgKey), -55*s, -55*s, 110*s, 110*s);
+      ctx.drawImage(img, -55*s, -55*s, 110*s, 110*s);
       ctx.restore();
       
       if (d.alive) {
@@ -363,5 +368,4 @@ export class GameScene {
     ctx.stroke(); ctx.setLineDash([]);
   }
 }
-
 
