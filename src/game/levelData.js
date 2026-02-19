@@ -1,12 +1,91 @@
 const levelData = [
-    { level: 1, difficulty: 'easy', dragonCount: 2, dragonType: 'green', objective: 'Collect 5 gems' },
-    { level: 2, difficulty: 'easy', dragonCount: 3, dragonType: 'blue', objective: 'Collect 10 gems' },
-    { level: 3, difficulty: 'medium', dragonCount: 4, dragonType: 'red', objective: 'Defeat 1 dragon' },
-    { level: 4, difficulty: 'medium', dragonCount: 5, dragonType: 'green', objective: 'Collect 15 gems' },
-    { level: 5, difficulty: 'medium', dragonCount: 7, dragonType: 'blue', objective: 'Defeat 2 dragons' },
-    { level: 6, difficulty: 'hard', dragonCount: 9, dragonType: 'red', objective: 'Collect 20 gems' },
-    { level: 7, difficulty: 'hard', dragonCount: 10, dragonType: 'purple', objective: 'Defeat 3 dragons' },
-    { level: 8, difficulty: 'hard', dragonCount: 12, dragonType: 'black', objective: 'Collect 25 gems' }
+    {
+        name: "Training Ground",
+        dragons: [
+            { type: "Beginner Dragon", hp: 50, ammo: 2 },
+            { type: "Beginner Dragon", hp: 50, ammo: 2 }
+        ],
+        difficulty: "Very Easy"
+    },
+    {
+        name: "Cave Exploration",
+        dragons: [
+            { type: "Beginner Dragon", hp: 50, ammo: 2 },
+            { type: "Beginner Dragon", hp: 50, ammo: 2 },
+            { type: "Intermediate Dragon", hp: 100, ammo: 3 }
+        ],
+        difficulty: "Easy"
+    },
+    {
+        name: "Forest Battle",
+        dragons: [
+            { type: "Intermediate Dragon", hp: 100, ammo: 3 },
+            { type: "Intermediate Dragon", hp: 100, ammo: 3 }
+        ],
+        difficulty: "Medium"
+    },
+    {
+        name: "River Clash",
+        dragons: [
+            { type: "Intermediate Dragon", hp: 100, ammo: 3 },
+            { type: "Advanced Dragon", hp: 150, ammo: 4 },
+            { type: "Advanced Dragon", hp: 150, ammo: 4 }
+        ],
+        difficulty: "Medium"
+    },
+    {
+        name: "Desert Ambush",
+        dragons: [
+            { type: "Advanced Dragon", hp: 150, ammo: 4 },
+            { type: "Advanced Dragon", hp: 150, ammo: 4 },
+            { type: "Elite Dragon", hp: 200, ammo: 5 }
+        ],
+        difficulty: "Hard"
+    },
+    {
+        name: "Mountain Peak",
+        dragons: [
+            { type: "Elite Dragon", hp: 200, ammo: 5 },
+            { type: "Elite Dragon", hp: 200, ammo: 5 },
+            { type: "Elite Dragon", hp: 200, ammo: 5 }
+        ],
+        difficulty: "Hard"
+    },
+    {
+        name: "Sky Fortress",
+        dragons: [
+            { type: "Elite Dragon", hp: 200, ammo: 5 },
+            { type: "Legendary Dragon", hp: 300, ammo: 6 }
+        ],
+        difficulty: "Very Hard"
+    },
+    {
+        name: "Volcanic Challenge",
+        dragons: [
+            { type: "Legendary Dragon", hp: 300, ammo: 6 },
+            { type: "Legendary Dragon", hp: 300, ammo: 6 },
+            { type: "Legendary Dragon", hp: 300, ammo: 6 }
+        ],
+        difficulty: "Very Hard"
+    },
+    {
+        name: "Final Showdown",
+        dragons: [
+            { type: "Legendary Dragon", hp: 300, ammo: 6 },
+            { type: "Mythical Dragon", hp: 400, ammo: 7 }
+        ],
+        difficulty: "Extreme"
+    },
+    {
+        name: "Dragon's Lair",
+        dragons: [
+            { type: "Mythical Dragon", hp: 400, ammo: 7 },
+            { type: "Mythical Dragon", hp: 400, ammo: 7 },
+            { type: "Mythical Dragon", hp: 400, ammo: 7 },
+            { type: "Mythical Dragon", hp: 400, ammo: 7 }
+        ],
+        difficulty: "Extreme"
+    }
 ];
 
-module.exports = levelData;
+export default levelData;
