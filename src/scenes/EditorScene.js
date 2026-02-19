@@ -1,28 +1,60 @@
-import { toast } from "../core/utils.js";
+import React, { useState } from 'react';
 
-export class EditorScene {
-  constructor(app) { this.app = app; }
-  enter() { toast("Editor: próximamente (ya está el módulo listo) • ESC para volver"); }
+const EditorScene = () => {
+    const [dragons, setDragons] = useState([]);
+    const [ammo, setAmmo] = useState([]);
 
-  update(dt) {
-    const { input } = this.app;
-    if (input.isKey("escape")) this.app.setScene("menu");
-  }
+    const addDragon = () => {
+        const newDragon = { id: dragons.length, name: `Dragon ${dragons.length + 1}` };
+        setDragons([...dragons, newDragon]);
+    };
 
-  draw(ctx) {
-    const { assets } = this.app;
-    ctx.drawImage(assets.I("background"), 0, 0, 1280, 720);
+    const removeDragon = (id) => {
+        setDragons(dragons.filter(dragon => dragon.id !== id));
+    };
 
-    ctx.fillStyle = "rgba(0,0,0,0.35)";
-    ctx.fillRect(0, 0, 1280, 720);
+    const configureDragon = (id, name) => {
+        setDragons(dragons.map(dragon => (dragon.id === id ? { ...dragon, name } : dragon)));
+    };
 
-    ctx.fillStyle = "#fff";
-    ctx.font = "800 42px system-ui";
-    ctx.textAlign = "center";
-    ctx.fillText("Editor de niveles", 640, 220);
+    const addAmmo = () => {
+        const newAmmo = { id: ammo.length, type: `Ammo ${ammo.length + 1}` };
+        setAmmo([...ammo, newAmmo]);
+    };
 
-    ctx.font = "500 18px system-ui";
-    ctx.fillText("Aquí haremos: colocar dragones, ajustar HP, rutas, límites de piedras.", 640, 280);
-    ctx.fillText("ESC = volver", 640, 330);
-  }
-}
+    const removeAmmo = (id) => {
+        setAmmo(ammo.filter(a => a.id !== id));
+    };
+
+    const configureAmmo = (id, type) => {
+        setAmmo(ammo.map(a => (a.id === id ? { ...a, type } : a)));
+    };
+
+    return (
+        <div>
+            <h1>Level Editor</h1>
+            <h2>Dragons</h2>
+            <button onClick={addDragon}>Add Dragon</button>
+            <ul>
+                {dragons.map(dragon => (
+                    <li key={dragon.id}>
+                        <input type="text" value={dragon.name} onChange={e => configureDragon(dragon.id, e.target.value)} />
+                        <button onClick={() => removeDragon(dragon.id)}>Remove</button>
+                    </li>
+                ))}
+            </ul>
+            <h2>Ammo</h2>
+            <button onClick={addAmmo}>Add Ammo</button>
+            <ul>
+                {ammo.map(a => (
+                    <li key={a.id}>
+                        <input type="text" value={a.type} onChange={e => configureAmmo(a.id, e.target.value)} />
+                        <button onClick={() => removeAmmo(a.id)}>Remove</button>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+};
+
+export default EditorScene;
