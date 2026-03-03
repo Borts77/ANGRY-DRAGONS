@@ -1,58 +1,41 @@
 import React, { useState } from 'react';
+import './EditorScene.css';  
 
 const EditorScene = () => {
     const [dragons, setDragons] = useState([]);
-    const [ammo, setAmmo] = useState([]);
+    const [dragonsCount, setDragonsCount] = useState(0);
 
-    const addDragon = () => {
-        const newDragon = { id: dragons.length, name: `Dragon ${dragons.length + 1}` };
+    const addDragon = (x, y) => {
+        const newDragon = { id: dragonsCount, x, y };
         setDragons([...dragons, newDragon]);
+        setDragonsCount(dragonsCount + 1);
     };
 
     const removeDragon = (id) => {
         setDragons(dragons.filter(dragon => dragon.id !== id));
     };
 
-    const configureDragon = (id, name) => {
-        setDragons(dragons.map(dragon => (dragon.id === id ? { ...dragon, name } : dragon)));
-    };
-
-    const addAmmo = () => {
-        const newAmmo = { id: ammo.length, type: `Ammo ${ammo.length + 1}` };
-        setAmmo([...ammo, newAmmo]);
-    };
-
-    const removeAmmo = (id) => {
-        setAmmo(ammo.filter(a => a.id !== id));
-    };
-
-    const configureAmmo = (id, type) => {
-        setAmmo(ammo.map(a => (a.id === id ? { ...a, type } : a)));
+    const handleClick = (e) => {
+        const rect = e.target.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        addDragon(x, y);
     };
 
     return (
-        <div>
-            <h1>Level Editor</h1>
-            <h2>Dragons</h2>
-            <button onClick={addDragon}>Add Dragon</button>
-            <ul>
+        <div className="editor-container" onClick={handleClick}>
+            <h1>Dragon Level Editor</h1>
+            <div className="dragon-list">
                 {dragons.map(dragon => (
-                    <li key={dragon.id}>
-                        <input type="text" value={dragon.name} onChange={e => configureDragon(dragon.id, e.target.value)} />
+                    <div key={dragon.id} className="dragon" style={{ left: dragon.x, top: dragon.y }}>
+                        <span>🀄️</span>
                         <button onClick={() => removeDragon(dragon.id)}>Remove</button>
-                    </li>
+                    </div>
                 ))}
-            </ul>
-            <h2>Ammo</h2>
-            <button onClick={addAmmo}>Add Ammo</button>
-            <ul>
-                {ammo.map(a => (
-                    <li key={a.id}>
-                        <input type="text" value={a.type} onChange={e => configureAmmo(a.id, e.target.value)} />
-                        <button onClick={() => removeAmmo(a.id)}>Remove</button>
-                    </li>
-                ))}
-            </ul>
+            </div>
+            <div className="editor-area">
+                <p>Click to place a dragon</p>
+            </div>
         </div>
     );
 };
