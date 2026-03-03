@@ -1,99 +1,74 @@
-const levelData = [
+const LEVELS = [
     {
-        name: 'Beginner Level',
-        castleHP: 100,
-        ammo: [
-            { id: 'arrow', count: 20, mass: 1, scale: 1 },
-            { id: 'fireball', count: 5, mass: 3, scale: 1.5 }
-        ],
-        dragons: [
-            { type: 'Dragon1', hp: 50, speed: 1, x: 100, y: 200, scale: 1, isBoss: false }
-        ]
+        level: 1,
+        difficulty: 'easy',
+        enemies: ['goblin'],
+        layout: [[0, 1, 0], [0, 0, 0], [1, 0, 0]],
+        rewards: { coins: 10, items: ['healing potion'] }
     },
     {
-        name: 'Intermediate Level',
-        castleHP: 150,
-        ammo: [
-            { id: 'arrow', count: 25, mass: 1, scale: 1 },
-            { id: 'fireball', count: 8, mass: 3, scale: 1.5 }
-        ],
-        dragons: [
-            { type: 'Dragon1', hp: 70, speed: 1.2, x: 150, y: 250, scale: 1, isBoss: false },
-            { type: 'Dragon2', hp: 80, speed: 1.1, x: 300, y: 200, scale: 1.2, isBoss: false }
-        ]
+        level: 2,
+        difficulty: 'easy',
+        enemies: ['goblin', 'wolf'],
+        layout: [[1, 0, 1], [0, 1, 0], [0, 0, 1]],
+        rewards: { coins: 20, items: ['sword'] }
     },
     {
-        name: 'Advanced Level',
-        castleHP: 200,
-        ammo: [
-            { id: 'arrow', count: 30, mass: 1, scale: 1 },
-            { id: 'fireball', count: 10, mass: 3, scale: 1.5 }
-        ],
-        dragons: [
-            { type: 'Dragon2', hp: 100, speed: 1.3, x: 200, y: 300, scale: 1.2, isBoss: false },
-            { type: 'Dragon3', hp: 150, speed: 1.5, x: 400, y: 250, scale: 1.3, isBoss: false }
-        ]
+        level: 3,
+        difficulty: 'medium',
+        enemies: ['wolf', 'troll'],
+        layout: [[0, 1, 1], [1, 0, 0], [0, 1, 1]],
+        rewards: { coins: 30, items: ['shield'] }
     },
     {
-        name: 'Challenging Level',
-        castleHP: 250,
-        ammo: [
-            { id: 'arrow', count: 35, mass: 1, scale: 1 },
-            { id: 'fireball', count: 12, mass: 3, scale: 1.5 }
-        ],
-        dragons: [
-            { type: 'Dragon2', hp: 120, speed: 1.4, x: 300, y: 350, scale: 1.2, isBoss: false },
-            { type: 'Dragon3', hp: 180, speed: 1.6, x: 500, y: 300, scale: 1.3, isBoss: false },
-            { type: 'BossDragon', hp: 300, speed: 1.0, x: 700, y: 400, scale: 1.5, isBoss: true }
-        ]
+        level: 4,
+        difficulty: 'medium',
+        enemies: ['troll', 'goblin'],
+        layout: [[1, 0, 1], [0, 0, 0], [1, 1, 0]],
+        rewards: { coins: 40, items: ['armor'] }
     },
     {
-        name: 'Expert Level',
-        castleHP: 300,
-        ammo: [
-            { id: 'arrow', count: 40, mass: 1, scale: 1 },
-            { id: 'fireball', count: 15, mass: 3, scale: 1.5 }
-        ],
-        dragons: [
-            { type: 'Dragon3', hp: 200, speed: 1.5, x: 400, y: 400, scale: 1.3, isBoss: false },
-            { type: 'BossDragon', hp: 350, speed: 1.0, x: 800, y: 450, scale: 1.5, isBoss: true }
-        ]
+        level: 5,
+        difficulty: 'medium',
+        enemies: ['goblin', 'dragon'],
+        layout: [[0, 1, 0], [1, 0, 1], [0, 1, 0]],
+        rewards: { coins: 50, items: ['magic potion'] }
     },
     {
-        name: 'Master Level',
-        castleHP: 350,
-        ammo: [
-            { id: 'arrow', count: 50, mass: 1, scale: 1 },
-            { id: 'fireball', count: 20, mass: 3, scale: 1.5 }
-        ],
-        dragons: [
-            { type: 'Dragon3', hp: 250, speed: 1.6, x: 500, y: 500, scale: 1.4, isBoss: false },
-            { type: 'BossDragon', hp: 400, speed: 1.0, x: 900, y: 500, scale: 1.6, isBoss: true }
-        ]
+        level: 6,
+        difficulty: 'hard',
+        enemies: ['dragon', 'wolf'],
+        layout: [[1, 1, 0], [0, 1, 1], [1, 0, 0]],
+        rewards: { coins: 60, items: ['legendary sword'] }
     },
     {
-        name: 'Legendary Level',
-        castleHP: 400,
-        ammo: [
-            { id: 'arrow', count: 60, mass: 1, scale: 1 },
-            { id: 'fireball', count: 25, mass: 3, scale: 1.5 }
-        ],
-        dragons: [
-            { type: 'Dragon3', hp: 300, speed: 1.7, x: 600, y: 600, scale: 1.5, isBoss: false },
-            { type: 'BossDragon', hp: 450, speed: 1.0, x: 1000, y: 550, scale: 1.7, isBoss: true }
-        ]
+        level: 7,
+        difficulty: 'hard',
+        enemies: ['troll', 'dragon'],
+        layout: [[1, 0, 1], [1, 1, 0], [0, 1, 1]],
+        rewards: { coins: 70, items: ['potion of invisibility'] }
     },
     {
-        name: 'Ultimate Level',
-        castleHP: 500,
-        ammo: [
-            { id: 'arrow', count: 70, mass: 1, scale: 1 },
-            { id: 'fireball', count: 30, mass: 3, scale: 1.5 }
-        ],
-        dragons: [
-            { type: 'BossDragon', hp: 500, speed: 1.0, x: 1200, y: 600, scale: 1.8, isBoss: true }
-        ]
+        level: 8,
+        difficulty: 'hard',
+        enemies: ['goblin', 'wolf', 'troll'],
+        layout: [[0, 0, 1], [1, 1, 1], [0, 1, 0]],
+        rewards: { coins: 80, items: ['golden armor'] }
+    },
+    {
+        level: 9,
+        difficulty: 'very hard',
+        enemies: ['dragon', 'troll', 'wolf'],
+        layout: [[1, 1, 1], [0, 1, 0], [1, 1, 1]],
+        rewards: { coins: 90, items: ['ultimate weapon'] }
+    },
+    {
+        level: 10,
+        difficulty: 'very hard',
+        enemies: ['goblin', 'dragon', 'troll'],
+        layout: [[0, 1, 0], [1, 0, 1], [1, 1, 0]],
+        rewards: { coins: 100, items: ['treasure chest'] }
     }
 ];
 
-export default levelData;
+export default LEVELS;
