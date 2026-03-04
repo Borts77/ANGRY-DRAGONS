@@ -2,7 +2,7 @@
 
 class GameScene {
     constructor() {
-        this Dragons = [];
+        this.dragons = [];
         this.projectiles = [];
         this.isGameOver = false;
         this.score = 0;
